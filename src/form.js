@@ -39,7 +39,7 @@ function submitHandler(e) {
 
 function createAddProjectFieldSet() {
   const fieldset = document.createElement("fieldset");
-  const legend = document.createElement("legend");
+  const legend = document.createElement("label");
   legend.textContent = "Add new project";
   addInputField("text", "add-project", fieldset);
   const btn = createSubmitBtn("add-project");
@@ -48,15 +48,20 @@ function createAddProjectFieldSet() {
 
     const input = document.querySelector("#add-project");
     const project = document.querySelector("#project");
+    const sort = document.querySelector("#sort");
 
     const value = input.value;
     input.value = "";
 
     if (value) {
-      const option = document.createElement("option");
-      option.setAttribute("value", value);
-      option.textContent = value;
-      project.add(option);
+      function createOption(value) {
+        const option = document.createElement("option");
+        option.setAttribute("value", value);
+        option.textContent = value;
+        return option;
+      }
+      project.add(createOption(value));
+      sort.add(createOption(value));
     }
   });
   fieldset.appendChild(btn);
@@ -125,4 +130,5 @@ function createSubmitBtn(name) {
   btn.textContent = "Add";
   return btn;
 }
+
 export { createForm };
