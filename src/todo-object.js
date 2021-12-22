@@ -3,7 +3,7 @@ class Todo {
     this.id = id;
     this._name = name;
     this._description = desc;
-    this._dueDate = due;
+    this._due = due;
     this._priority = priority;
     this._project = project;
   }
@@ -16,8 +16,8 @@ class Todo {
     this._description = value;
   }
 
-  set dueDate(value) {
-    this._dueDate = value;
+  set due(value) {
+    this._due = value;
   }
 
   set priority(value) {
