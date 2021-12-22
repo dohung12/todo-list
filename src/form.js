@@ -1,9 +1,5 @@
-import { todoList } from "./index";
-import { Todo } from "./todo-object";
-import { displayTodoList } from "./displayControl";
+import { addItem } from "./displayControl";
 
-let editFlag = false;
-let editID = "";
 function createForm() {
   const form = document.createElement("form");
   form.className = "todo-input";
@@ -20,56 +16,6 @@ function createForm() {
 
   form.addEventListener("submit", addItem);
   return form;
-}
-
-function setEditDetails(editFlagVal, editIDVal, btnText) {
-  const btn = document.querySelector(".todo-input-btn");
-  editFlag = editFlagVal;
-  editID = editIDVal;
-  btn.textContent = btnText;
-}
-function addItem(e) {
-  e.preventDefault();
-
-  const name = document.querySelector("#name").value;
-  const id = new Date().getTime().toString();
-  if (name !== "" && !editFlag) {
-    let props = [id];
-    const fields = ["name", "description", "due-date", "priority", "project"];
-    for (let field of fields) {
-      props.push(document.querySelector(`#${field}`).value);
-    }
-
-    const todo = new Todo(
-      props[0],
-      props[1],
-      props[2],
-      props[3],
-      props[4],
-      props[5]
-    );
-    todoList.push(todo);
-    e.currentTarget.reset();
-
-    const content = document.querySelector("#content");
-    displayTodoList(todoList, content);
-  } else if (name !== "" && editFlag) {
-    // get edit obj by the ID
-    const todo = todoList.filter((item) => (item.id = editID))[0];
-    const todoDisplay = document.querySelector(`[data-id="${editID}" ]`);
-
-    const props = ["name", "description", "due-date", "priority", "project"];
-
-    for (let prop of props) {
-      const value = document.querySelector(`#${prop}`).value;
-
-      todo[prop] = value;
-      todoDisplay.querySelector(`.${prop}`).textContent = value;
-    }
-    // reset form back to input mode
-    setEditDetails(false, "", "add");
-    e.currentTarget.reset();
-  }
 }
 
 function createAddProject() {
@@ -112,7 +58,7 @@ function createTodoInput() {
 
   addInput("text", "name", fieldset);
   addInput("text", "description", fieldset);
-  addInput("date", "due-date", fieldset);
+  addInput("date", "due", fieldset);
   addOptionTypeInput("priority", ["low", "normal", "high"], fieldset);
   addOptionTypeInput("project", project, fieldset);
 
@@ -166,4 +112,4 @@ function createSubmitBtn(name) {
   return btn;
 }
 
-export { createForm, setEditDetails };
+export { createForm };
