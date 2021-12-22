@@ -1,23 +1,30 @@
 import { todoList } from "./index";
+import { setEditDetails } from "./form";
 
 function displayTodo(todo) {
   const item = document.createElement("div");
   item.className = "todo";
+  item.setAttribute("data-id", todo.id);
 
   const name = document.createElement("h4");
-  name.innerHTML = `<span>Title</span>: ${todo._name}`;
+  name.textContent = todo._name;
+  name.className = "name";
 
   const description = document.createElement("p");
-  description.innerHTML = `<span>Desc</span>: ${todo._description}`;
+  description.textContent = todo._description;
+  description.className = "description";
 
   const dueDate = document.createElement("p");
-  dueDate.innerHTML = `<span>Due</span>: ${todo._dueDate}`;
+  dueDate.textContent = todo._dueDate;
+  dueDate.className = "due-date";
 
   const project = document.createElement("p");
-  project.innerHTML = `<span>Project</span>: ${todo._project}`;
+  project.textContent = todo._project;
+  project.className = "project";
 
   const priority = document.createElement("button");
   priority.textContent = todo._priority;
+  priority.className = "priority";
   priority.addEventListener("click", (e) => {
     priorityBtnHandler(e, todo);
   });
@@ -32,13 +39,36 @@ function displayTodo(todo) {
     todoList.splice(index, 1);
   });
 
+  const editBtn = document.createElement("button");
+  editBtn.textContent = "edit";
+  editBtn.addEventListener("click", (e) => {
+    editBtnHandler(e, todo);
+  });
+
   item.appendChild(name);
   item.appendChild(description);
   item.appendChild(dueDate);
   item.appendChild(project);
   item.appendChild(priority);
   item.appendChild(delBtn);
+  item.appendChild(editBtn);
   return item;
+}
+
+function editBtnHandler(e, todo) {
+  setEditDetails(true, todo.id, "edit");
+  // set form value
+  const item = e.currentTarget.parentElement;
+  for (let element of [
+    "name",
+    "description",
+    "due-date",
+    "project",
+    "priority",
+  ]) {
+    const val = item.querySelector(`.${element}`);
+    document.querySelector(`#${element}`).value = val.innerHTML;
+  }
 }
 
 function priorityBtnHandler(e, todo) {
