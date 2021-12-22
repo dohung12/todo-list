@@ -1,7 +1,6 @@
 console.log("I'm in");
 import { createForm } from "./form";
 import { Todo } from "./todo-object";
-import { displayTodo } from "./displayControl";
 import { createSort } from "./sort";
 
 let todoList = [];
