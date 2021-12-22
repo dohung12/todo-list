@@ -170,8 +170,28 @@ function displayTodoList(todoList, parentElement) {
       container.appendChild(item);
     }
 
+    const clearAllBtn = document.createElement("button");
+    clearAllBtn.setAttribute("class", "btn clear-all-btn");
+    clearAllBtn.addEventListener("click", clearAllTodo);
+    clearAllBtn.textContent = "Remove All";
+
+    container.insertBefore(clearAllBtn, container.firstChild);
     parentElement.appendChild(container);
   }
+}
+
+function clearAllTodo() {
+  const todos = document.querySelectorAll(".todo");
+  const container = document.querySelector(".todo-container");
+  if (todos.length > 0) {
+    todos.forEach((todo) => {
+      container.removeChild(todo);
+    });
+  }
+  while (todoList.length > 0) {
+    todoList.splice(0, 1);
+  }
+  localStorage.removeItem("todoList");
 }
 
 function displayLocalTodoList() {
