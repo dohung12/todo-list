@@ -1,7 +1,7 @@
 console.log("I'm in");
 import { createForm } from "./form";
-import { Todo } from "./todo-object";
 import { createSort } from "./sort";
+import { displayLocalTodoList } from "./displayControl";
 
 let todoList = [];
 
@@ -12,4 +12,7 @@ content.appendChild(form);
 
 const sort = createSort();
 content.appendChild(sort);
+
+document.addEventListener("DOMContentLoaded", displayLocalTodoList);
+
 export { todoList };
