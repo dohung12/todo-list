@@ -4,12 +4,12 @@ function createForm() {
   const form = document.createElement("form");
   form.className = "todo-input";
 
-  const toDoFieldset = createTodoInput();
-
+  const inputFieldSet = createTodoInput();
+  inputFieldSet.className = "input-fieldset";
   const newProjectFieldset = createAddProject();
-  toDoFieldset.appendChild(newProjectFieldset);
+  inputFieldSet.appendChild(newProjectFieldset);
 
-  form.appendChild(toDoFieldset);
+  form.appendChild(inputFieldSet);
 
   const btn = createSubmitBtn("todo-input");
   form.appendChild(btn);
@@ -57,7 +57,7 @@ function createTodoInput() {
   fieldset.appendChild(legend);
 
   addInput("text", "name", fieldset);
-  addInput("text", "description", fieldset);
+
   addInput("date", "due", fieldset);
   addOptionTypeInput("priority", ["low", "normal", "high"], fieldset);
   addOptionTypeInput("project", project, fieldset);
