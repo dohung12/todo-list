@@ -4,11 +4,11 @@ function getLocalStorage(listName) {
     : [];
 }
 
-function addToLocalStorage(id, todo, listName) {
-  const item = { id, todo };
-  let todoList = getLocalStorage(listName);
-  todoList.push(item);
-  localStorage.setItem(listName, JSON.stringify(listName));
+function addToLocalStorage(id, item, listName) {
+  const val = { id, item };
+  let list = getLocalStorage(listName);
+  list.push(val);
+  localStorage.setItem(listName, JSON.stringify(list));
 }
 
 function removeFromLocalStorage(id, listName) {
