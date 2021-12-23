@@ -1,0 +1,150 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Space Mono", monospace;
+  text-transform: capitalize;
+}
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Space+Mono&display=swap");
+
+h1,
+h2,
+h4 {
+  font-family: "Libre Baskerville", serif;
+}
+body {
+  height: 100vh;
+}
+/* HEADER */
+
+.header {
+  font-size: 50px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  padding: 1rem;
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  color: #f8fafc;
+  background-color: #1e293b;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.header h1 {
+  font-size: 50px;
+}
+
+/* DISPLAY STYLE */
+#content {
+  display: flex;
+  height: 100%;
+}
+/* FORM */
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  padding: 20px;
+
+  background-color: #cbd5e1;
+}
+
+form .input-fieldset {
+  display: flex;
+  flex-direction: column;
+  border: 0;
+}
+
+/* MISC BAR */
+.misc-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.clear-all-btn {
+  display: inline-block;
+  padding: 0 10px;
+  font-size: 20px;
+}
+/* SORT CONTAINER */
+.sort-container {
+  display: inline-block;
+}
+
+.sort-container fieldset {
+  border: 0;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+select#sort {
+  font-size: 20px;
+}
+
+.sort-container button {
+  padding: 0 10px;
+  font-size: 20px;
+}
+/* TODO-DISPLAY */
+
+.display-todo {
+  padding: 20px 40px;
+  width: 100%;
+  background-color: #f1f5f9;
+}
+
+.todo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo {
+  width: 100%;
+  font-size: 20px;
+  overflow-wrap: break-word;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.others-info {
+  display: flex;
+  gap: 10px;
+}
+.priority {
+  width: 100px;
+  font-size: 20px;
+  padding: 0 10px;
+}
+
+p.task {
+  width: 100%;
+}
+p.due {
+  width: 130px;
+}
+
+p.project {
+  width: 130px;
+}
+
+.btn-container {
+  display: flex;
+  gap: 10px;
+}
+
+.del-btn,
+.edit-btn {
+  border: transparent;
+  font-size: 20px;
+  background: transparent;
+}
