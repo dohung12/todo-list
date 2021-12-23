@@ -1,17 +1,22 @@
-console.log("I'm in");
 import { createForm } from "./form";
-import { createSort } from "./sort";
-import { displayLocalTodoList } from "./displayControl";
 
-let todoList = [];
+import {
+  displayLocalTodoList,
+  createDisplayElement,
+  createHeader,
+} from "./displayControl";
 
 const content = document.querySelector("#content");
-const form = createForm();
+let todoList = [];
 
+const header = createHeader();
+document.body.insertBefore(header, document.body.firstChild);
+
+const form = createForm();
 content.appendChild(form);
 
-const sort = createSort();
-content.appendChild(sort);
+const div = createDisplayElement();
+content.appendChild(div);
 
 document.addEventListener("DOMContentLoaded", displayLocalTodoList);
 
