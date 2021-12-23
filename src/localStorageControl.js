@@ -1,31 +1,31 @@
-function getLocalStorage() {
-  return localStorage.getItem("todoList")
-    ? JSON.parse(localStorage.getItem("todoList"))
+function getLocalStorage(listName) {
+  return localStorage.getItem(listName)
+    ? JSON.parse(localStorage.getItem(listName))
     : [];
 }
 
-function addToLocalStorage(id, todo) {
+function addToLocalStorage(id, todo, listName) {
   const item = { id, todo };
-  let todoList = getLocalStorage();
+  let todoList = getLocalStorage(listName);
   todoList.push(item);
-  localStorage.setItem("todoList", JSON.stringify(todoList));
+  localStorage.setItem(listName, JSON.stringify(listName));
 }
 
-function removeFromLocalStorage(id) {
-  let todoList = getLocalStorage();
-  todoList = todoList.filter((item) => item.id !== id);
-  localStorage.setItem("todoList", JSON.stringify(todoList));
+function removeFromLocalStorage(id, listName) {
+  let list = getLocalStorage();
+  list = list.filter((item) => item.id !== id);
+  localStorage.setItem(listName, JSON.stringify(list));
 }
 
-function editLocalStorage(id, todo) {
-  let todoList = getLocalStorage();
-  todoList = todoList.map((item) => {
+function editLocalStorage(id, todo, listName) {
+  let list = getLocalStorage();
+  list = list.map((item) => {
     if (item.id === id) {
       item.todo = todo;
     }
     return item;
   });
-  localStorage.setItem("todoList", JSON.stringify(todoList));
+  localStorage.setItem(listName, JSON.stringify(list));
 }
 
 export {
