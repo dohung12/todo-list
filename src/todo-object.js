@@ -1,19 +1,19 @@
 class Todo {
-  constructor(id, name, due, priority, project) {
+  constructor(id, task, due, priority, project) {
     this.id = id;
-    this._name = name;
+    this._task = task;
 
     this._due = due;
     this._priority = priority;
     this._project = project;
   }
 
-  get name() {
-    return this._name;
+  get task() {
+    return this._task;
   }
 
-  set name(value) {
-    this._name = value;
+  set task(value) {
+    this._task = value;
   }
 
   get due() {
