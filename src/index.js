@@ -1,5 +1,5 @@
 import { createForm } from "./form";
-
+import "./style.css";
 import {
   displayLocalTodoList,
   createDisplayElement,
