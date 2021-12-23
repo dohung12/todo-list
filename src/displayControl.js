@@ -14,13 +14,9 @@ function createTodoDisplay(todo) {
   item.className = "todo";
   item.setAttribute("data-id", todo.id);
 
-  const name = document.createElement("h4");
-  name.textContent = todo._name;
+  const name = document.createElement("p");
+  name.textContent = "task";
   name.className = "name";
-
-  const description = document.createElement("p");
-  description.textContent = todo._description;
-  description.className = "description";
 
   const due = document.createElement("p");
   due.textContent = todo._due;
@@ -30,6 +26,9 @@ function createTodoDisplay(todo) {
   project.textContent = todo._project;
   project.className = "project";
 
+  const btnContainer = document.createElement("div");
+  btnContainer.className = "btn-container";
+
   const priority = document.createElement("button");
   priority.textContent = todo._priority;
   priority.className = "priority";
@@ -38,24 +37,32 @@ function createTodoDisplay(todo) {
   });
   // del btn
   const delBtn = document.createElement("button");
-  delBtn.textContent = "del";
+  delBtn.setAttribute("class", "btn del-btn");
+  addIcon(delBtn, "fas fa-trash");
   delBtn.addEventListener("click", (e) => {
     delItem(e, todo);
   });
   //  edit btn
   const editBtn = document.createElement("button");
-  editBtn.textContent = "edit";
+  editBtn.setAttribute("class", "btn edit-btn");
+  addIcon(editBtn, "fas fa-edit");
   editBtn.addEventListener("click", (e) => {
     editItem(e, todo);
   });
+  const others = document.createElement("div");
+  others.className = "others-info";
 
   item.appendChild(name);
-  item.appendChild(description);
-  item.appendChild(due);
-  item.appendChild(project);
   item.appendChild(priority);
-  item.appendChild(delBtn);
-  item.appendChild(editBtn);
+
+  others.appendChild(due);
+  others.appendChild(project);
+
+  btnContainer.appendChild(delBtn);
+  btnContainer.appendChild(editBtn);
+  others.appendChild(btnContainer);
+
+  item.appendChild(others);
   return item;
 }
 
@@ -66,6 +73,12 @@ function setEditDetails(editFlagVal, editIDVal, btnText) {
   btn.textContent = btnText;
 }
 
+function addIcon(parentElement, iconName) {
+  const icon = document.createElement("i");
+  icon.setAttribute("class", iconName);
+  parentElement.appendChild(icon);
+}
+
 function addItem(e) {
   e.preventDefault();
 
@@ -74,19 +87,12 @@ function addItem(e) {
   if (name !== "" && !editFlag) {
     // * ADD MODE
     let props = [id];
-    const fields = ["name", "description", "due", "priority", "project"];
+    const fields = ["name", "due", "priority", "project"];
     for (let field of fields) {
       props.push(document.querySelector(`#${field}`).value);
     }
 
-    const todo = new Todo(
-      props[0],
-      props[1],
-      props[2],
-      props[3],
-      props[4],
-      props[5]
-    );
+    const todo = new Todo(props[0], props[1], props[2], props[3], props[4]);
     todoList.push(todo);
     e.currentTarget.reset();
 
@@ -102,7 +108,7 @@ function addItem(e) {
     const todo = todoList.filter((item) => (item.id = editID))[0];
     const todoDisplay = document.querySelector(`[data-id="${editID}" ]`);
 
-    const props = ["name", "description", "due", "priority", "project"];
+    const props = ["name", "due", "priority", "project"];
 
     for (let prop of props) {
       const value = document.querySelector(`#${prop}`).value;
@@ -131,7 +137,7 @@ function editItem(e, todo) {
   setEditDetails(true, todo.id, "edit");
   // set form value
   const item = e.currentTarget.parentElement;
-  for (let element of ["name", "description", "due", "project", "priority"]) {
+  for (let element of ["name", "due", "project", "priority"]) {
     const val = item.querySelector(`.${element}`);
     document.querySelector(`#${element}`).value = val.innerHTML;
   }
@@ -154,30 +160,52 @@ function switchPriority(e, todo) {
 function displayTodoList(todoList, parentElement) {
   const container = document.querySelector(".todo-container");
 
-  if (parentElement.contains(container)) {
-    container.innerHTML = "";
+  const todos = container.querySelectorAll(".todo");
+  todos.forEach((item) => {
+    container.removeChild(item);
+  });
 
-    for (let todo of todoList) {
-      const item = createTodoDisplay(todo);
-      container.appendChild(item);
-    }
-  } else {
-    const container = document.createElement("div");
-    container.className = "todo-container";
-
-    for (let todo of todoList) {
-      const item = createTodoDisplay(todo);
-      container.appendChild(item);
-    }
-
-    const clearAllBtn = document.createElement("button");
-    clearAllBtn.setAttribute("class", "btn clear-all-btn");
-    clearAllBtn.addEventListener("click", clearAllTodo);
-    clearAllBtn.textContent = "Remove All";
-
-    container.insertBefore(clearAllBtn, container.firstChild);
-    parentElement.appendChild(container);
+  for (let todo of todoList) {
+    const item = createTodoDisplay(todo);
+    container.appendChild(item);
   }
+}
+
+function createContainer() {
+  const container = document.createElement("div");
+  container.className = "todo-container";
+
+  return container;
+}
+
+function createClearAllBtn() {
+  const clearAllBtn = document.createElement("button");
+  clearAllBtn.setAttribute("class", "btn clear-all-btn");
+  clearAllBtn.addEventListener("click", clearAllTodo);
+  clearAllBtn.textContent = "Remove All";
+
+  return clearAllBtn;
+}
+
+function displayLocalTodoList() {
+  let items = getLocalStorage();
+
+  if (items.length > 0) {
+    items.forEach((item) => {
+      const oldItem = item.todo;
+      const newItem = new Todo(
+        oldItem.id,
+        oldItem._name,
+        oldItem._due,
+        oldItem._priority,
+        oldItem._project
+      );
+      todoList.push(newItem);
+    });
+  }
+
+  const content = document.querySelector("#content");
+  displayTodoList(todoList, content);
 }
 
 function clearAllTodo() {
@@ -194,15 +222,11 @@ function clearAllTodo() {
   localStorage.removeItem("todoList");
 }
 
-function displayLocalTodoList() {
-  let items = getLocalStorage();
-
-  if (items.length > 0) {
-    items.forEach((item) => todoList.push(item.todo));
-  }
-
-  const content = document.querySelector("#content");
-  displayTodoList(todoList, content);
-}
-
-export { displayTodoList, addItem, displayLocalTodoList };
+export {
+  displayTodoList,
+  addItem,
+  displayLocalTodoList,
+  createContainer,
+  addIcon,
+  createClearAllBtn,
+};
