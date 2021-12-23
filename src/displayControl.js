@@ -7,7 +7,7 @@ import {
 } from "./localStorageControl";
 import { Todo } from "./todo-object";
 import { createSort } from "./sort";
-
+import { createSelectOption } from "./form";
 let editFlag = false;
 let editID = "";
 
@@ -195,7 +195,7 @@ function addItem(e) {
 }
 
 function delItem(e, todo) {
-  const item = e.currentTarget.parentElement;
+  const item = e.currentTarget.parentElement.parentElement.parentElement;
   item.parentElement.removeChild(item);
 
   const index = todoList.indexOf(todo);
@@ -240,11 +240,11 @@ function togglePriority(e, todo) {
 
 // * DISPLAY TODO LIST STORE IN LOCALSTORAGE
 function displayLocalTodoList() {
-  let items = getLocalStorage("todoList");
+  const todos = getLocalStorage("todoList");
 
-  if (items.length > 0) {
-    items.forEach((item) => {
-      const oldItem = item.todo;
+  if (todos.length > 0) {
+    todos.forEach((item) => {
+      const oldItem = item.item;
       const newItem = new Todo(
         oldItem.id,
         oldItem._task,
@@ -257,6 +257,19 @@ function displayLocalTodoList() {
   }
 
   displayTodoList(todoList);
+
+  const projects = getLocalStorage("projectList");
+  if (projects.length > 0) {
+    projects.forEach((item) => {
+      const oldProject = item.item;
+      const project = document.querySelector("#project");
+      const sort = document.querySelector("#sort");
+      const removeProject = document.querySelector("#remove-project");
+      createSelectOption(oldProject, project);
+      createSelectOption(oldProject, sort);
+      createSelectOption(oldProject, removeProject);
+    });
+  }
 }
 
 export {
