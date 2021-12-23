@@ -12,16 +12,16 @@ function addToLocalStorage(id, item, listName) {
 }
 
 function removeFromLocalStorage(id, listName) {
-  let list = getLocalStorage();
+  let list = getLocalStorage(listName);
   list = list.filter((item) => item.id !== id);
   localStorage.setItem(listName, JSON.stringify(list));
 }
 
 function editLocalStorage(id, todo, listName) {
-  let list = getLocalStorage();
+  let list = getLocalStorage(listName);
   list = list.map((item) => {
     if (item.id === id) {
-      item.todo = todo;
+      item.item = todo;
     }
     return item;
   });
