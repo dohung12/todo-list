@@ -1,4 +1,4 @@
-class Todo {
+export default class Todo {
   constructor(id, task, due, priority, project) {
     this.id = id;
     this._task = task;
@@ -27,6 +27,7 @@ class Todo {
   get priority() {
     return this._priority;
   }
+
   set priority(value) {
     this._priority = value;
   }
@@ -39,5 +40,3 @@ class Todo {
     this._project = value;
   }
 }
-
-export { Todo };
