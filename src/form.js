@@ -1,4 +1,9 @@
+import { todoList } from ".";
 import { addItem } from "./displayControl";
+import {
+  addToLocalStorage,
+  removeFromLocalStorage,
+} from "./localStorageControl";
 
 let project = ["personal", "work"];
 
@@ -8,10 +13,13 @@ function createForm() {
 
   const inputFieldSet = createTodoInput();
   inputFieldSet.className = "input-fieldset";
-  const newProjectFieldset = createAddProject();
-  inputFieldSet.appendChild(newProjectFieldset);
 
+  const newProjectFieldset = createAddNewProject();
+  inputFieldSet.appendChild(newProjectFieldset);
   form.appendChild(inputFieldSet);
+
+  const removeProjectFieldSet = createRemoveProject();
+  form.appendChild(removeProjectFieldSet);
 
   const btn = createSubmitBtn("todo-input");
   form.appendChild(btn);
@@ -20,35 +28,96 @@ function createForm() {
   return form;
 }
 
-function createAddProject() {
+function createAddNewProject() {
   const fieldset = document.createElement("fieldset");
   const legend = document.createElement("label");
   legend.textContent = "Add new project";
   addInput("text", "add-project", fieldset);
   const btn = createSubmitBtn("add-project");
   btn.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    const input = document.querySelector("#add-project");
-    const project = document.querySelector("#project");
-    const sort = document.querySelector("#sort");
-
-    const value = input.value;
-    input.value = "";
-
-    if (value) {
-      function createOption(value) {
-        const option = document.createElement("option");
-        option.setAttribute("value", value);
-        option.textContent = value;
-        return option;
-      }
-      project.add(createOption(value));
-      sort.add(createOption(value));
-    }
+    addNewProjectHandler(e);
   });
   fieldset.appendChild(btn);
   return fieldset;
+}
+
+function addNewProjectHandler(e) {
+  e.preventDefault();
+
+  const input = document.querySelector("#add-project");
+  const project = document.querySelector("#project");
+  const sort = document.querySelector("#sort");
+  const removeProject = document.querySelector("#remove-project");
+
+  const value = input.value;
+  input.value = "";
+
+  if (value) {
+    addToLocalStorage(value, value, "projectList");
+    createSelectOption(value, project);
+    createSelectOption(value, sort);
+    createSelectOption(value, removeProject);
+  }
+}
+
+function createSelectOption(value, parentElement) {
+  const option = document.createElement("option");
+  option.setAttribute("value", value);
+  option.textContent = value;
+
+  parentElement.add(option);
+}
+
+function createRemoveProject() {
+  // create remove project element
+  const fieldset = document.createElement("fieldset");
+  const label = document.createElement("label");
+  label.textContent = "Remove project";
+  const removeProject = document.createElement("select");
+  removeProject.setAttribute("id", "remove-project");
+
+  // create options
+
+  const btn = document.createElement("button");
+  btn.setAttribute("type", "submit");
+  btn.textContent = "Remove";
+  btn.addEventListener("click", removeProjectClickHandler);
+
+  fieldset.appendChild(label);
+  fieldset.appendChild(removeProject);
+  fieldset.appendChild(btn);
+
+  return fieldset;
+}
+
+function removeProjectClickHandler(e) {
+  e.preventDefault();
+
+  const project = document.querySelector("#project");
+  const sort = document.querySelector("#sort");
+  const removeProject = document.querySelector("#remove-project");
+
+  const value = removeProject.value;
+
+  const allowRemove = !todoList.some((todo) => todo._project === value);
+  if (allowRemove) {
+    // remove option from select
+    removeSelectOption(value, removeProject);
+    removeSelectOption(value, project);
+    removeSelectOption(value, sort);
+    // remove in local storage
+    removeFromLocalStorage(value, "projectList");
+  }
+}
+
+function removeSelectOption(value, parentElement) {
+  const options = parentElement.querySelectorAll("option");
+
+  options.forEach((item) => {
+    if (item.value === value) {
+      parentElement.removeChild(item);
+    }
+  });
 }
 
 function createTodoInput() {
@@ -112,4 +181,4 @@ function createSubmitBtn(task) {
   return btn;
 }
 
-export { createForm };
+export { createForm, createSelectOption };
