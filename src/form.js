@@ -1,5 +1,5 @@
 import { todoList } from ".";
-import { addItem } from "./displayControl";
+import { addItem, addIcon } from "./displayControl";
 import {
   addToLocalStorage,
   removeFromLocalStorage,
@@ -8,6 +8,15 @@ import {
 let project = ["personal", "work"];
 
 function createForm() {
+  const div = document.createElement("div");
+  div.className = "form-container";
+
+  const header = document.createElement("h2");
+  header.textContent = "create your todo";
+  addIcon(header, "fas fa-caret-square-down");
+
+  div.appendChild(header);
+
   const form = document.createElement("form");
   form.className = "todo-input";
 
@@ -15,17 +24,24 @@ function createForm() {
   inputFieldSet.className = "input-fieldset";
 
   const newProjectFieldset = createAddNewProject();
-  inputFieldSet.appendChild(newProjectFieldset);
   form.appendChild(inputFieldSet);
 
   const removeProjectFieldSet = createRemoveProject();
-  form.appendChild(removeProjectFieldSet);
 
   const btn = createSubmitBtn("todo-input");
+  btn.textContent = "Create";
   form.appendChild(btn);
 
   form.addEventListener("submit", addItem);
-  return form;
+
+  form.appendChild(newProjectFieldset);
+  form.appendChild(removeProjectFieldSet);
+
+  header.addEventListener("click", () => {
+    form.classList.toggle("show-form");
+  });
+  div.appendChild(form);
+  return div;
 }
 
 function createAddNewProject() {
@@ -122,9 +138,6 @@ function removeSelectOption(value, parentElement) {
 
 function createTodoInput() {
   const fieldset = document.createElement("fieldset");
-  const legend = document.createElement("legend");
-  legend.textContent = "Create your Todo";
-  fieldset.appendChild(legend);
 
   addInput("text", "task", fieldset);
   addInput("date", "due", fieldset);
