@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { todoList } from "./index";
 import {
   getLocalStorage,
@@ -5,12 +6,19 @@ import {
   removeFromLocalStorage,
   editLocalStorage,
 } from "./localStorageControl";
-import { Todo } from "./todo-object";
-import { createSort } from "./sort";
+import Todo from "./todo-object";
+import createSort from "./sort";
 import { createSelectOption } from "./form";
+
 let editFlag = false;
 let editID = "";
 
+// ADD FONT AWESOME ICON TO ELEMENT
+function addIcon(parentElement, iconName) {
+  const icon = document.createElement("i");
+  icon.setAttribute("class", iconName);
+  parentElement.appendChild(icon);
+}
 // * CREATE HEADER
 function createHeader() {
   const header = document.createElement("header");
@@ -24,6 +32,28 @@ function createHeader() {
   return header;
 }
 
+function clearAllTodo() {
+  const todos = document.querySelectorAll(".todo");
+  const container = document.querySelector(".todo-container");
+  if (todos.length > 0) {
+    todos.forEach((todo) => {
+      container.removeChild(todo);
+    });
+  }
+  while (todoList.length > 0) {
+    todoList.splice(0, 1);
+  }
+  localStorage.removeItem("todoList");
+}
+
+function createClearAllBtn() {
+  const clearAllBtn = document.createElement("button");
+  clearAllBtn.setAttribute("class", "btn clear-all-btn");
+  clearAllBtn.addEventListener("click", clearAllTodo);
+  clearAllBtn.textContent = "Remove All";
+
+  return clearAllBtn;
+}
 // * CREATE TODO LIST DISPLAY ELEMENT
 function createDisplayElement() {
   const div = document.createElement("div");
@@ -46,44 +76,56 @@ function createDisplayElement() {
   return div;
 }
 
-function createClearAllBtn() {
-  const clearAllBtn = document.createElement("button");
-  clearAllBtn.setAttribute("class", "btn clear-all-btn");
-  clearAllBtn.addEventListener("click", clearAllTodo);
-  clearAllBtn.textContent = "Remove All";
+function delItem(e, todo) {
+  const item = e.currentTarget.parentElement.parentElement.parentElement;
+  item.parentElement.removeChild(item);
 
-  return clearAllBtn;
+  const index = todoList.indexOf(todo);
+  todoList.splice(index, 1);
+
+  removeFromLocalStorage(todo.id, "todoList");
 }
 
-function clearAllTodo() {
-  const todos = document.querySelectorAll(".todo");
-  const container = document.querySelector(".todo-container");
-  if (todos.length > 0) {
-    todos.forEach((todo) => {
-      container.removeChild(todo);
-    });
-  }
-  while (todoList.length > 0) {
-    todoList.splice(0, 1);
-  }
-  localStorage.removeItem("todoList");
+function setEditDetails(editFlagVal, editIDVal, btnText) {
+  const btn = document.querySelector(".todo-input-btn");
+  editFlag = editFlagVal;
+  editID = editIDVal;
+  btn.textContent = btnText;
 }
 
-// * DISPLAY TODOLIST
-function displayTodoList(todoList) {
-  const container = document.querySelector(".todo-container");
+function editItem(e, todo) {
+  setEditDetails(true, todo.id, "edit");
 
-  const todos = container.querySelectorAll(".todo");
-  todos.forEach((item) => {
-    container.removeChild(item);
+  // if form is hidden, show form
+  const form = document.querySelector("form");
+  if (form.classList.contains("show-form")) {
+    form.classList.remove("show-form");
+  }
+  // set form value
+  const item = e.currentTarget.parentElement.parentElement.parentElement;
+
+  ["task", "due", "project", "priority"].forEach((element) => {
+    const val = item.querySelector(`.${element}`);
+    document.querySelector(`#${element}`).value = val.innerHTML;
   });
-
-  for (let todo of todoList) {
-    const item = createDisplayForTodo(todo);
-    container.appendChild(item);
-  }
 }
 
+// TOGGLE PRIORITY DISPLAY
+function togglePriority(e, todo) {
+  const priority = e.currentTarget;
+  if (todo._priority === "low") {
+    todo.priority = "normal";
+    priority.textContent = todo._priority;
+  } else if (todo._priority === "normal") {
+    todo.priority = "high";
+    priority.textContent = todo._priority;
+  } else if (todo._priority === "high") {
+    todo.priority = "low";
+    priority.textContent = todo._priority;
+  }
+
+  editLocalStorage(todo.id, todo, "todoList");
+}
 // * SET DISPLAY FOR A SINGLE TODO
 function createDisplayForTodo(todo) {
   const item = document.createElement("div");
@@ -142,11 +184,18 @@ function createDisplayForTodo(todo) {
   return item;
 }
 
-// ADD FONT AWESOME ICON TO ELEMENT
-function addIcon(parentElement, iconName) {
-  const icon = document.createElement("i");
-  icon.setAttribute("class", iconName);
-  parentElement.appendChild(icon);
+// * DISPLAY TODOLIST
+function displayTodoList(list) {
+  const container = document.querySelector(".todo-container");
+
+  const todos = container.querySelectorAll(".todo");
+  todos.forEach((item) => {
+    container.removeChild(item);
+  });
+
+  list.forEach((todo) => {
+    container.appendChild(createDisplayForTodo(todo));
+  });
 }
 
 // TOGGLE DISPLAY TODO FUNCTION
@@ -157,11 +206,10 @@ function addItem(e) {
   const id = new Date().getTime().toString();
   if (task !== "" && !editFlag) {
     // * ADD MODE
-    let props = [id];
-    const fields = ["task", "due", "priority", "project"];
-    for (let field of fields) {
+    const props = [id];
+    ["task", "due", "priority", "project"].forEach((field) => {
       props.push(document.querySelector(`#${field}`).value);
-    }
+    });
 
     const todo = new Todo(props[0], props[1], props[2], props[3], props[4]);
     todoList.push(todo);
@@ -179,14 +227,12 @@ function addItem(e) {
     const todo = todoList.filter((item) => (item.id = editID))[0];
     const todoDisplay = document.querySelector(`[data-id="${editID}" ]`);
 
-    const props = ["task", "due", "priority", "project"];
-
-    for (let prop of props) {
-      const value = document.querySelector(`#${prop}`).value;
+    ["task", "due", "priority", "project"].forEach((prop) => {
+      const { value } = document.querySelector(`#${prop}`);
 
       todo[prop] = value;
       todoDisplay.querySelector(`.${prop}`).textContent = value;
-    }
+    });
     editLocalStorage(todo.id, todo, "todoList");
     // reset form back to input mode
     setEditDetails(false, "", "create");
@@ -194,57 +240,7 @@ function addItem(e) {
   }
 }
 
-function delItem(e, todo) {
-  const item = e.currentTarget.parentElement.parentElement.parentElement;
-  item.parentElement.removeChild(item);
-
-  const index = todoList.indexOf(todo);
-  todoList.splice(index, 1);
-
-  removeFromLocalStorage(todo.id, "todoList");
-}
-
-function editItem(e, todo) {
-  setEditDetails(true, todo.id, "edit");
-
-  // if form is hidden, show form
-  const form = document.querySelector("form");
-  if (form.classList.contains("show-form")) {
-    form.classList.remove("show-form");
-  }
-  // set form value
-  console.log(e.currentTarget.parentElement.parentElement.parentElement);
-  const item = e.currentTarget.parentElement.parentElement.parentElement;
-  for (let element of ["task", "due", "project", "priority"]) {
-    const val = item.querySelector(`.${element}`);
-    document.querySelector(`#${element}`).value = val.innerHTML;
-  }
-}
-
 // CONTROL EDIT MODE
-function setEditDetails(editFlagVal, editIDVal, btnText) {
-  const btn = document.querySelector(".todo-input-btn");
-  editFlag = editFlagVal;
-  editID = editIDVal;
-  btn.textContent = btnText;
-}
-
-// TOGGLE PRIORITY DISPLAY
-function togglePriority(e, todo) {
-  const priority = e.currentTarget;
-  if (todo._priority === "low") {
-    todo.priority = "normal";
-    priority.textContent = todo._priority;
-  } else if (todo._priority === "normal") {
-    todo.priority = "high";
-    priority.textContent = todo._priority;
-  } else if (todo._priority === "high") {
-    todo.priority = "low";
-    priority.textContent = todo._priority;
-  }
-
-  editLocalStorage(todo.id, todo, "todoList");
-}
 
 // * DISPLAY TODO LIST STORE IN LOCALSTORAGE
 function displayLocalTodoList() {
