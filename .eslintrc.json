@@ -10,7 +10,9 @@
   },
   "rules": {
     "no-underscore-dangle": "off",
-    "no-return-assign": "off"
+    "no-return-assign": "off",
+    "no-console": "off",
+    "import/no-cycle": "off"
   },
   "extends": ["airbnb-base", "prettier"]
 }
