@@ -168,7 +168,7 @@ function addItem(e) {
     e.currentTarget.reset();
 
     // add item to local storage
-    addToLocalStorage(id, todo);
+    addToLocalStorage(id, todo, "todoList");
     // display item
 
     displayTodoList(todoList);
@@ -187,7 +187,7 @@ function addItem(e) {
       todo[prop] = value;
       todoDisplay.querySelector(`.${prop}`).textContent = value;
     }
-    editLocalStorage(todo.id, todo);
+    editLocalStorage(todo.id, todo, "todoList");
     // reset form back to input mode
     setEditDetails(false, "", "add");
     e.currentTarget.reset();
@@ -201,7 +201,7 @@ function delItem(e, todo) {
   const index = todoList.indexOf(todo);
   todoList.splice(index, 1);
 
-  removeFromLocalStorage(todo.id);
+  removeFromLocalStorage(todo.id, "todoList");
 }
 
 function editItem(e, todo) {
@@ -240,7 +240,7 @@ function togglePriority(e, todo) {
 
 // * DISPLAY TODO LIST STORE IN LOCALSTORAGE
 function displayLocalTodoList() {
-  let items = getLocalStorage();
+  let items = getLocalStorage("todoList");
 
   if (items.length > 0) {
     items.forEach((item) => {
