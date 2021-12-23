@@ -28,13 +28,13 @@ function createSort() {
 function sortClickHandler(e) {
   e.preventDefault();
   const sort = document.querySelector("#sort");
-  const content = document.querySelector("#content");
+
   const project = sort.value;
   if (project !== "all") {
     let newList = todoList.filter((todo) => todo._project === project);
-    displayTodoList(newList, content);
+    displayTodoList(newList);
   } else {
-    displayTodoList(todoList, content);
+    displayTodoList(todoList);
   }
 }
 
