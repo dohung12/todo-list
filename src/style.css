@@ -49,6 +49,7 @@ body {
 .form-container {
   background-color: #cbd5e1;
   width: 350px;
+
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -92,7 +93,6 @@ form .input-fieldset {
   display: flex;
   flex-direction: column;
   border: 0;
-  gap: 10px;
 }
 
 .todo-input-btn {
