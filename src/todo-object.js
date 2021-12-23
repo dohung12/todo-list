@@ -1,27 +1,38 @@
 class Todo {
-  constructor(id, name, desc, due, priority, project) {
+  constructor(id, name, due, priority, project) {
     this.id = id;
     this._name = name;
-    this._description = desc;
+
     this._due = due;
     this._priority = priority;
     this._project = project;
+  }
+
+  get name() {
+    return this._name;
   }
 
   set name(value) {
     this._name = value;
   }
 
-  set description(value) {
-    this._description = value;
+  get due() {
+    return this._due;
   }
 
   set due(value) {
     this._due = value;
   }
 
+  get priority() {
+    return this._priority;
+  }
   set priority(value) {
     this._priority = value;
+  }
+
+  get project() {
+    return this._project;
   }
 
   set project(value) {
