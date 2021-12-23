@@ -6,7 +6,7 @@ function getLocalStorage(listName) {
 
 function addToLocalStorage(id, item, listName) {
   const val = { id, item };
-  let list = getLocalStorage(listName);
+  const list = getLocalStorage(listName);
   list.push(val);
   localStorage.setItem(listName, JSON.stringify(list));
 }
@@ -21,6 +21,7 @@ function editLocalStorage(id, todo, listName) {
   let list = getLocalStorage(listName);
   list = list.map((item) => {
     if (item.id === id) {
+      // eslint-disable-next-line no-param-reassign
       item.item = todo;
     }
     return item;
