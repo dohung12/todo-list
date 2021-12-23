@@ -189,7 +189,7 @@ function addItem(e) {
     }
     editLocalStorage(todo.id, todo, "todoList");
     // reset form back to input mode
-    setEditDetails(false, "", "add");
+    setEditDetails(false, "", "create");
     e.currentTarget.reset();
   }
 }
@@ -206,6 +206,12 @@ function delItem(e, todo) {
 
 function editItem(e, todo) {
   setEditDetails(true, todo.id, "edit");
+
+  // if form is hidden, show form
+  const form = document.querySelector("form");
+  if (form.classList.contains("show-form")) {
+    form.classList.remove("show-form");
+  }
   // set form value
   console.log(e.currentTarget.parentElement.parentElement.parentElement);
   const item = e.currentTarget.parentElement.parentElement.parentElement;
@@ -236,6 +242,8 @@ function togglePriority(e, todo) {
     todo.priority = "low";
     priority.textContent = todo._priority;
   }
+
+  editLocalStorage(todo.id, todo, "todoList");
 }
 
 // * DISPLAY TODO LIST STORE IN LOCALSTORAGE
@@ -278,4 +286,5 @@ export {
   displayLocalTodoList,
   createDisplayElement,
   createHeader,
+  addIcon,
 };
