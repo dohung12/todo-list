@@ -1,5 +1,7 @@
 import { addItem } from "./displayControl";
 
+let project = ["personal", "work"];
+
 function createForm() {
   const form = document.createElement("form");
   form.className = "todo-input";
@@ -50,14 +52,12 @@ function createAddProject() {
 }
 
 function createTodoInput() {
-  const project = ["personal", "work"];
   const fieldset = document.createElement("fieldset");
   const legend = document.createElement("legend");
   legend.textContent = "Create your Todo";
   fieldset.appendChild(legend);
 
-  addInput("text", "name", fieldset);
-
+  addInput("text", "task", fieldset);
   addInput("date", "due", fieldset);
   addOptionTypeInput("priority", ["low", "normal", "high"], fieldset);
   addOptionTypeInput("project", project, fieldset);
@@ -65,15 +65,15 @@ function createTodoInput() {
   return fieldset;
 }
 
-function addInput(type, name, form) {
+function addInput(type, inputField, form) {
   const input = document.createElement("input");
   const label = document.createElement("label");
 
-  label.setAttribute("for", name);
-  label.textContent = `${name.replace("-", " ")}: `;
+  label.textContent = inputField;
+  label.setAttribute("for", inputField);
 
-  input.setAttribute("name", name);
-  input.setAttribute("id", name);
+  input.setAttribute("name", inputField);
+  input.setAttribute("id", inputField);
   input.setAttribute("type", type);
 
   form.appendChild(label);
@@ -104,9 +104,9 @@ function addOptionTypeInput(id, items, form) {
   form.appendChild(select);
 }
 
-function createSubmitBtn(name) {
+function createSubmitBtn(task) {
   const btn = document.createElement("button");
-  btn.setAttribute("class", `btn submit-btn ${name}-btn`);
+  btn.setAttribute("class", `btn submit-btn ${task}-btn`);
   btn.setAttribute("type", "submit");
   btn.textContent = "Add";
   return btn;
