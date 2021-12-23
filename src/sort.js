@@ -2,6 +2,8 @@ import { displayTodoList } from "./displayControl";
 import { todoList } from "./index";
 
 function createSort() {
+  const div = document.createElement("div");
+  div.className = "sort-container";
   const fieldset = document.createElement("fieldset");
   const label = document.createElement("label");
   label.textContent = "Sort project";
@@ -19,7 +21,8 @@ function createSort() {
   fieldset.appendChild(sort);
   fieldset.appendChild(btn);
 
-  return fieldset;
+  div.appendChild(fieldset);
+  return div;
 }
 
 function sortClickHandler(e) {
